@@ -13,44 +13,74 @@ import threading
 import time
 
 def recive(on):
-    print(on + " \n")
+    MCAST_GRP = '224.1.1.6'
+    MCAST_PORT = 5004
     
-    multicast_addr = '228.0.0.1'
-    bind_addr = '0.0.0.0'
-    port = 3000
-    i = 0
-
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    membership = socket.inet_aton(multicast_addr) + socket.inet_aton(bind_addr)
-
-    sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, membership)
+    print(on)
+    
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    sock.bind(('', MCAST_PORT))
+    mreq = struct.pack("4sl", socket.inet_aton(MCAST_GRP), socket.INADDR_ANY)
+    sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+    while True:
+        print(sock.recv(10240))
+        
+    # print(on + " \n")
+    
+    # multicast_addr = '228.0.0.1'
+    # bind_addr = '0.0.0.0'
+    # port = 3000
 
-    sock.bind((bind_addr, port))
+    # sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    # membership = socket.inet_aton(multicast_addr) + socket.inet_aton(bind_addr)
 
-    for i in range(3):
-        message, address = sock.recvfrom(255)
-        print (message)
+    # sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, membership)
+    # sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
+    # sock.bind((bind_addr, port))
+
+    # for i in range(3):
+    #     message, address = sock.recvfrom(255)
+    #     print (message)
+
+    
 
 # --------------------------
 def send(message):
-    # message = sys.argv[1] if len(sys.argv) > 1 else 'message via multicast'
-    # message = "Mengo"
+    group = '224.1.1.6'
+    port = 5004
+    # 2-hop restriction in network
+    ttl = 2
+    sock = socket.socket(socket.AF_INET,
+                        socket.SOCK_DGRAM,
+                        socket.IPPROTO_UDP)
+    sock.setsockopt(socket.IPPROTO_IP,
+                    socket.IP_MULTICAST_TTL,
+                    ttl)
+    
+    for i in range(1):   
+        #input
+        sock.sendto(b"Vamos Flamengo", (group, port))
+    
+    # # message = sys.argv[1] if len(sys.argv) > 1 else 'message via multicast'
+    # # message = "Mengo"
 
-    multicast_addr = '228.0.0.1'
-    port = 3000
+    # multicast_addr = '228.0.0.1'
+    # port = 3000
 
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    ttl = struct.pack('b', 1)
-    sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, ttl)
-    sock.sendto(message.encode(), (multicast_addr, port))
-    sock.close()
+    # sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    # ttl = struct.pack('b', 1)
+    # sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, ttl)
+    # sock.sendto(message.encode(), (multicast_addr, port))
+    # sock.close()
     
     
 
-t = threading.Thread(target=recive,args=("thread sendo executada",))
-t.start()
+trecive = threading.Thread(target=recive,args=("thread reciveMulticast sendo executada",))
+trecive.start()
 
-send("mengo")
+tsend = threading.Thread(target=send,args=("thread sendMulticast sendo executada",))
+tsend.start()
+
 
