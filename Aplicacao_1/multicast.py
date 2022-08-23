@@ -13,14 +13,14 @@ import threading
 import time
 
 def recive(on):
-    MCAST_GRP = '224.1.1.6'
-    MCAST_PORT = 5004
+    MCAST_GRP = '224.1.1.1'
+    MCAST_PORT = input("digite a porta: ")
     
     print(on)
     
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    sock.bind(('', MCAST_PORT))
+    sock.bind(('', int(MCAST_PORT)))
     mreq = struct.pack("4sl", socket.inet_aton(MCAST_GRP), socket.INADDR_ANY)
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
     while True:
@@ -48,8 +48,8 @@ def recive(on):
 
 # --------------------------
 def send(message):
-    group = '224.1.1.6'
-    port = 5004
+    group = '224.1.1.1'
+    port = 5678
     # 2-hop restriction in network
     ttl = 2
     sock = socket.socket(socket.AF_INET,
@@ -61,7 +61,8 @@ def send(message):
     
     for i in range(1):   
         #input
-        sock.sendto(b"Vamos Flamengo", (group, port))
+        sock.sendto(b"as", (group, port))
+        message = input("Menssagem: ")
     
     # # message = sys.argv[1] if len(sys.argv) > 1 else 'message via multicast'
     # # message = "Mengo"
