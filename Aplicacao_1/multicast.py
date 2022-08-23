@@ -13,7 +13,7 @@ import threading
 import time
 
 def recive(on):
-    MCAST_GRP = '224.1.1.1'
+    MCAST_GRP = '224.1.1.2'
     MCAST_PORT = input("digite a porta: ")
     
     print(on)
@@ -48,7 +48,7 @@ def recive(on):
 
 # --------------------------
 def send(message):
-    group = '224.1.1.1'
+    group = '224.1.1.2'
     port = 5678
     # 2-hop restriction in network
     ttl = 2
