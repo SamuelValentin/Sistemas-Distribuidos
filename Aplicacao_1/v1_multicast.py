@@ -1,3 +1,9 @@
+# chat server using multicast
+# python fork of the original ruby implementation
+# http://tx.pignata.com/2012/11/multicast-in-ruby-building-a-peer-to-peer-chat-system.html
+# send.py
+# usage : $ python send.py message
+
 from email import message
 import socket
 import struct
@@ -5,20 +11,12 @@ import sys
 
 import threading
 import time
-# from typing_extensions import Self
 
-# Multicast ---------------------------------------------
-# -> Init: thread (send / recive)
-# -> Send/Recive: Mensagem de Ola / Mensagem para anunciar o fim da eleicao
- 
-def multicastReciver(ip, port):
-    print("Multicast - reciver start")
-    print(ip, port)
-    
+def recive(on):
     MCAST_GRP = '224.1.1.2'
     MCAST_PORT = input("digite a porta: ")
     
-    print("on")
+    print(on)
     
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -45,10 +43,11 @@ def multicastReciver(ip, port):
     # for i in range(3):
     #     message, address = sock.recvfrom(255)
     #     print (message)
+
     
-def multicastSend():
-    print("Multicast - Send start")
-    
+
+# --------------------------
+def send(message):
     group = '224.1.1.2'
     port = 5678
     # 2-hop restriction in network
@@ -76,44 +75,11 @@ def multicastSend():
     # sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, ttl)
     # sock.sendto(message.encode(), (multicast_addr, port))
     # sock.close()
-        
+    
+    
 
-# Uniicast ---------------------------------------------
-# -> Init: thread (send / recive)
-# -> Send/Recive: Mensagem de pedido de eleicao / Mensagem de resposta ao pedido de eleicao
-       
-def unicastReciver():
-    print("Uniicast - reciver start")
-    
-def unicastSend():
-    print("Uniicast - Send start")
-    
-# ------------------ Main -------------------------
-def main():
-    print("Bem vindo")  
-    # ip = input("digite o ip: ")
-    # port = input("digite a porta: ")  
-    
-    ip = '228.1.1.1'
-    port = 6789
-        
-    # Inicia o multicast -- 
-    trecive = threading.Thread(target=multicastReciver,args=(ip,port))
-    trecive.start()
-    tsend = threading.Thread(target=multicastSend)
-    tsend.start()
-        
-    # Inicia o Unicast --    
-    unicastReciver()
-    unicastSend()
-        
-    state = 0
-    # while(state != "1"):
-    #     state = input("Digite 1 para sair ou 0 pra enviar: ")
-    #     if(state == 0):
-    #         p1.send(" ")
-        
+trecive = threading.Thread(target=recive,args=("thread reciveMulticast sendo executada",))
+trecive.start()
 
-# -------------------------------------------------
-if __name__ == '__main__':
-    main()
+tsend = threading.Thread(target=send,args=("thread sendMulticast sendo executada",))
+tsend.start()
