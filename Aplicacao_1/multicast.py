@@ -88,24 +88,44 @@ def unicastReciver():
 def unicastSend():
     print("Uniicast - Send start")
     
+# Lista de id init -------------------------------------
+
+def listId():
+    
+    id1 = [1,'228.1.1.1', 6789]
+    id2 = [2,'228.1.1.2', 5678]
+    id3 = [3,'228.1.1.3', 4567]
+    id4 = [4,'228.1.1.4', 3456]
+    
+    lista = [id1, id2, id3, id4]
+    
+    return lista
+    
+    
 # ------------------ Main -------------------------
 def main():
-    print("Bem vindo")  
-    # ip = input("digite o ip: ")
-    # port = input("digite a porta: ")  
+    # Inicializacao 
+    print("Bem vindo!\n") 
+    lista = listId()
+    length = len(lista)
     
-    ip = '228.1.1.1'
-    port = 6789
+    for i in range(length):
+        print(lista[i])
+    
+    id = int(input("Escolha um id para começar: "))
+    ip = lista[id-1][1]
+    port = lista[id-1][2]
+    
+       
+    # # Inicia o multicast -- 
+    # trecive = threading.Thread(target=multicastReciver,args=(ip,port))
+    # trecive.start()
+    # tsend = threading.Thread(target=multicastSend)
+    # tsend.start()
         
-    # Inicia o multicast -- 
-    trecive = threading.Thread(target=multicastReciver,args=(ip,port))
-    trecive.start()
-    tsend = threading.Thread(target=multicastSend)
-    tsend.start()
-        
-    # Inicia o Unicast --    
-    unicastReciver()
-    unicastSend()
+    # # Inicia o Unicast --    
+    # unicastReciver()
+    # unicastSend()
         
     state = 0
     # while(state != "1"):
