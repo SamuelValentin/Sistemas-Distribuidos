@@ -35,10 +35,9 @@ def multicastReceiver():
 def multicastSend():
     print("Multicast - Send start")
     
-    # 2-hop restriction in network
     group = '224.1.1.1'
     port = 8090
-    # 2-hop restriction in network
+
     ttl = 2
     sock = socket.socket(socket.AF_INET,
                         socket.SOCK_DGRAM,
@@ -46,7 +45,14 @@ def multicastSend():
     sock.setsockopt(socket.IPPROTO_IP,
                     socket.IP_MULTICAST_TTL,
                     ttl)
-    sock.sendto(b"hello world", (group, port))
+    state = 0
+
+    if(state == 1): #  Ola a todos
+        message = b"hello world" 
+    elif(state == 2): # Mensagem de coordenador
+        message = b"Eu sou o Novo coordenador" 
+    
+    sock.sendto(message, (group, port))
 
         
 
@@ -69,14 +75,26 @@ def unicastReceiver(ip ,port):
         data, addr = sock.recvfrom(1024) # buffer size is 1024 bytes
         print("received message: %s" % data)
         i += 1
+
+        if(False):
+            aux = input("Deseja ser o coordenador:\n1-Sim\nNao\n")
+            if(aux == 1):
+                unicastSend(ip, port)
     
     
 def unicastSend(ip, port):
-    print("Uniicast - Send start")
+    # print("Uniicast - Send start")
 
     UDP_IP = ip
     UDP_PORT = port
-    MESSAGE = b"Hello, World!"
+
+    state = 0
+    if(state == 1): # Eleicao
+        message = b"quero ser o chefe" 
+    elif(state == 2): # Resposta eleicao
+        message = b"nao" 
+
+    MESSAGE = message
 
     print("UDP target IP: %s" % UDP_IP)
     print("UDP target port: %s" % UDP_PORT)
@@ -98,6 +116,21 @@ def listId():
     lista = [id1, id2, id3, id4]
     
     return lista
+
+# Mensagens --------------------------------------------
+
+def helloMessage():
+    multicastSend()
+
+def coordinatorMessage():
+    multicastSend()
+
+def electionMessage():
+    for i in range(4):
+        unicastSend()
+
+def responseMessage():
+    unicastSend()
     
     
 # ------------------ Main -------------------------
@@ -117,15 +150,15 @@ def main():
     
        
     # Inicia o multicast -- 
-    trecive = threading.Thread(target=multicastReceiver,args=(ip,port))
+    trecive = threading.Thread(target=multicastReceiver)
     trecive.start()
-    tsend = threading.Thread(target=multicastSend)
-    tsend.start()
+    # tsend = threading.Thread(target=multicastSend)
+    # tsend.start()
         
     # Inicia o Unicast -- 
-    # tUreceive = threading.Thread(target=unicastReceiver)
-    # tUreceive.start()
-    # tUsend = threading.Thread(target=unicastSend)
+    tUreceive = threading.Thread(target=unicastReceiver,args=(ip,port))
+    tUreceive.start()
+    # tUsend = threading.Thread(target=unicastSend,args=(ip,port))
     # tUsend.start()
     
         
