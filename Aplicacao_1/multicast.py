@@ -9,9 +9,9 @@ import time
 
 # Multicast ---------------------------------------------
 # -> Init: thread (send / recive)
-# -> Send/Recive: Mensagem de Ola / Mensagem para anunciar o fim da eleicao
+# -> Send/Receive: Mensagem de Ola / Mensagem para anunciar o fim da eleicao
  
-def multicastReciver(ip, port):
+def multicastReceiver(ip, port):
     print("Multicast - reciver start")
     print(ip, port)
     
@@ -79,11 +79,12 @@ def multicastSend():
         
 
 # Uniicast ---------------------------------------------
-# -> Init: thread (send / recive)
+# -> Init: thread (send / receive)
 # -> Send/Recive: Mensagem de pedido de eleicao / Mensagem de resposta ao pedido de eleicao
        
-def unicastReciver():
+def unicastReceiver():
     print("Uniicast - reciver start")
+    
     
 def unicastSend():
     print("Uniicast - Send start")
@@ -104,7 +105,8 @@ def listId():
     
 # ------------------ Main -------------------------
 def main():
-    # Inicializacao 
+    
+    # Inicializacao do ip e porta
     print("Bem vindo!\n") 
     lista = listId()
     length = len(lista)
@@ -117,15 +119,18 @@ def main():
     port = lista[id-1][2]
     
        
-    # # Inicia o multicast -- 
-    # trecive = threading.Thread(target=multicastReciver,args=(ip,port))
+    # Inicia o multicast -- 
+    # trecive = threading.Thread(target=multicastReceiver,args=(ip,port))
     # trecive.start()
     # tsend = threading.Thread(target=multicastSend)
     # tsend.start()
         
-    # # Inicia o Unicast --    
-    # unicastReciver()
-    # unicastSend()
+    # Inicia o Unicast -- 
+    tUreceive = threading.Thread(target=unicastReceiver)
+    tUreceive.start()
+    tUsend = threading.Thread(target=unicastSend)
+    tUsend.start()
+    
         
     state = 0
     # while(state != "1"):
