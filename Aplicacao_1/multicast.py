@@ -8,6 +8,9 @@ import time
 # from typing_extensions import Self
 # Desktop/UTFPR/sd/Sistemas-Distribuidos/Aplicacao_1
 
+# Mensagem:
+# type-id-Message
+
 # Multicast ---------------------------------------------
 # -> Init: thread (send / recive)
 # -> Send/Receive: Mensagem de Ola / Mensagem para anunciar o fim da eleicao
@@ -29,7 +32,12 @@ def multicastReceiver():
     mreq = struct.pack("4sl", socket.inet_aton(MCAST_GRP), socket.INADDR_ANY)
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
     while True:
-        print(sock.recv(10240))
+        message = sock.recv(10240)
+        # print(sock.recv(10240))
+        if (message[0] == 1):
+            print("Ola")
+        elif (message[0] == 2):
+            print("Oi chef")
     
     
 def multicastSend():
@@ -60,7 +68,7 @@ def multicastSend():
 # -> Init: thread (send / receive)
 # -> Send/Recive: Mensagem de pedido de eleicao / Mensagem de resposta ao pedido de eleicao
        
-def unicastReceiver(ip ,port):
+def unicastReceiver(ip ,port, id):
     print("Uniicast - reciver start")
 
     UDP_IP = ip
@@ -76,13 +84,23 @@ def unicastReceiver(ip ,port):
         print("received message: %s" % data)
         i += 1
 
-        if(False):
+        # Pedido de eleicao
+        if(data[0] == 1):
+            tam = len(data)
+            print(data[2 : tam])
             aux = input("Deseja ser o coordenador:\n1-Sim\nNao\n")
             if(aux == 1):
-                unicastSend(ip, port)
+                listaId = listaId()
+                unicastSend(ip, port, 2)
+                i = id
+                for i in listaId:
+                    unicastSend(listaId[i][1],listaId[i][2])
+        # Negado o pedido de eleição        
+        elif(data[0] == 2):
+            print("nao deu")
     
     
-def unicastSend(ip, port):
+def unicastSend(ip, port, type):
     # print("Uniicast - Send start")
 
     UDP_IP = ip
@@ -156,7 +174,7 @@ def main():
     # tsend.start()
         
     # Inicia o Unicast -- 
-    tUreceive = threading.Thread(target=unicastReceiver,args=(ip,port))
+    tUreceive = threading.Thread(target=unicastReceiver,args=(ip,port,(id-1)))
     tUreceive.start()
     # tUsend = threading.Thread(target=unicastSend,args=(ip,port))
     # tUsend.start()
