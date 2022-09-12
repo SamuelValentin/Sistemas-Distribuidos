@@ -76,10 +76,25 @@ def send(message):
     # sock.sendto(message.encode(), (multicast_addr, port))
     # sock.close()
     
+def teste(a):
+    for i in range(10):
+        a = a + 1
+        print(a)
+        time.sleep(2)
     
 
-trecive = threading.Thread(target=recive,args=("thread reciveMulticast sendo executada",))
-trecive.start()
+# trecive = threading.Thread(target=recive,args=("thread reciveMulticast sendo executada",))
+# trecive.start()
 
-tsend = threading.Thread(target=send,args=("thread sendMulticast sendo executada",))
-tsend.start()
+# tsend = threading.Thread(target=send,args=("thread sendMulticast sendo executada",))
+# tsend.start()
+
+a = 0
+
+t = threading.Thread(target=teste,args=(a,))
+t.start()
+
+for i in range(5):
+    print(a)
+    time.sleep(2)
+    t.terminate()

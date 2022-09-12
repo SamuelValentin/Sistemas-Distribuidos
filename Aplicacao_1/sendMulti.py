@@ -15,15 +15,15 @@
 # sock.setsockopt(socket.IPPROTO_IP,
 #                 socket.IP_MULTICAST_TTL,
 #                 ttl)
-# sock.sendto(b"hello world", (group, port))
+# sock.sendto(b"hello", (group, port))
 
 
 # ---------------------------------------------------  Unicast
 
 import socket
  
-UDP_IP = "127.0.0.1"
-UDP_PORT = 5005
+UDP_IP = "127.0.0.3"
+UDP_PORT = 4567
 MESSAGE = b"Hello, World!"
 
 print("UDP target IP: %s" % UDP_IP)

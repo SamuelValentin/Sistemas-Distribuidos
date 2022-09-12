@@ -18,18 +18,47 @@
 #     print(sock.recv(10240))
     
 # Uniscast ------------------------------------
-
+from re import A, T
 import socket
+from threading import Thread
+import time
 
-UDP_IP = "127.0.0.1"
-UDP_PORT = 5005
+a = False
 
-sock = socket.socket(socket.AF_INET, # Internet
-                     socket.SOCK_DGRAM) # UDP
-sock.bind((UDP_IP, UDP_PORT))
+def send():
+    UDP_IP = "127.0.0.1"
+    UDP_PORT = 5005
+    MESSAGE = b"Hello, World!"
 
-i=0
-while (i < 2):
-    data, addr = sock.recvfrom(1024) # buffer size is 1024 bytes
-    print("received message: %s" % data)
-    i += 1
+    # print("UDP target IP: %s" % UDP_IP)
+    # print("UDP target port: %s" % UDP_PORT)
+    # print("message: %s" % MESSAGE)
+
+    sock = socket.socket(socket.AF_INET, # Internet
+                        socket.SOCK_DGRAM) # UDP
+    sock.sendto(MESSAGE, (UDP_IP, UDP_PORT))
+
+def unicast():
+    UDP_IP = "127.0.0.1"
+    UDP_PORT = 5005
+
+    global a
+    
+    sock = socket.socket(socket.AF_INET, # Internet
+                        socket.SOCK_DGRAM) # UDP
+    sock.bind((UDP_IP, UDP_PORT))
+
+    while True:
+        data, addr = sock.recvfrom(1024) # buffer size is 1024 bytes
+        print("received message: %s" % data)
+        print(addr)
+        if(a):
+            break
+
+Thread(target = unicast).start()
+
+time.sleep(1)
+time.sleep(1)
+a = True
+send()
+time.sleep(1)

@@ -1,4 +1,5 @@
 from email import message
+from itertools import count
 import socket
 import struct
 import sys
@@ -23,26 +24,29 @@ def multicastReceiver():
     
     MCAST_GRP = group
     MCAST_PORT = port
-    
-    print("on")
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.bind(('', MCAST_PORT))
     mreq = struct.pack("4sl", socket.inet_aton(MCAST_GRP), socket.INADDR_ANY)
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
-    while True:
-        message = sock.recv(10240)
-        # print(sock.recv(10240))
-        if (message[0] == 1):
+
+    i=0
+    while (i < 5):
+        i += 1
+        message = str(sock.recv(10240))
+        tam = len(message)
+        if (message[2] == '1'):
+            print(message[2 : tam])
             print("Ola")
-        elif (message[0] == 2):
+        elif (message[2] == '2'):
+            print(message[2 : tam])
             print("Oi chef")
+        elif (message[2] == '4'):
+            break
     
     
-def multicastSend():
-    print("Multicast - Send start")
-    
+def multicastSend(state): 
     group = '224.1.1.1'
     port = 8090
 
@@ -53,12 +57,11 @@ def multicastSend():
     sock.setsockopt(socket.IPPROTO_IP,
                     socket.IP_MULTICAST_TTL,
                     ttl)
-    state = 0
-
+    
     if(state == 1): #  Ola a todos
-        message = b"hello world" 
+        message = b"1-hello world" 
     elif(state == 2): # Mensagem de coordenador
-        message = b"Eu sou o Novo coordenador" 
+        message = b"2-Eu sou o Novo coordenador" 
     
     sock.sendto(message, (group, port))
 
@@ -68,41 +71,53 @@ def multicastSend():
 # -> Init: thread (send / receive)
 # -> Send/Recive: Mensagem de pedido de eleicao / Mensagem de resposta ao pedido de eleicao
        
+permissao = True
+
 def unicastReceiver(ip ,port, id):
     print("Uniicast - reciver start")
+    global permissao
 
     UDP_IP = ip
     UDP_PORT = port
+
+    print(ip)
+    print(port)
 
     sock = socket.socket(socket.AF_INET, # Internet
                         socket.SOCK_DGRAM) # UDP
     sock.bind((UDP_IP, UDP_PORT))
 
     i=0
-    while (i < 2):
+    while (i < 10):
         data, addr = sock.recvfrom(1024) # buffer size is 1024 bytes
         print("received message: %s" % data)
         i += 1
 
+        message = str(data)
         # Pedido de eleicao
-        if(data[0] == 1):
+        if(message[2] == '1'):
             tam = len(data)
             print(data[2 : tam])
             aux = input("Deseja ser o coordenador:\n1-Sim\nNao\n")
             if(aux == 1):
-<<<<<<< HEAD
-                unicastSend(ip, port)
-                
-=======
                 listaId = listaId()
                 unicastSend(ip, port, 2)
                 i = id
                 for i in listaId:
-                    unicastSend(listaId[i][1],listaId[i][2])
+                    unicastSend(listaId[i][1],listaId[i][2],1)
+                timer = threading.Thread(target=timerElection,args=(ip,port))
+                timer.start()
+
         # Negado o pedido de eleição        
-        elif(data[0] == 2):
+        elif(message[2] == '2'):
             print("nao deu")
->>>>>>> 623e62bfadaf4c164cf5b96a78d7ec3d3d7304cd
+            permissao = False
+
+        elif(message[2] == '3'):
+            multicastSend(2)
+
+        elif(message[2] == '4'):
+            break
     
     
 def unicastSend(ip, port, type):
@@ -113,9 +128,11 @@ def unicastSend(ip, port, type):
 
     state = 0
     if(state == 1): # Eleicao
-        message = b"quero ser o chefe" 
+        message = b"1-quero ser o chefe" 
     elif(state == 2): # Resposta eleicao
-        message = b"nao" 
+        message = b"2-nao" 
+    elif(state == 3): # Finalizacao do Timer
+        message = b"3-TimerFinalizado" 
 
     MESSAGE = message
 
@@ -131,29 +148,22 @@ def unicastSend(ip, port, type):
 
 def listId():
     
+    id0 = [0,'127.0.0.0', 1234]
     id1 = [1,'127.0.0.1', 6789]
     id2 = [2,'127.0.0.2', 5678]
     id3 = [3,'127.0.0.3', 4567]
     id4 = [4,'127.0.0.4', 3456]
     
-    lista = [id1, id2, id3, id4]
+    lista = [id0, id1, id2, id3, id4]
     
     return lista
 
 # Mensagens --------------------------------------------
 
-def helloMessage():
-    multicastSend()
-
-def coordinatorMessage():
-    multicastSend()
-
-def electionMessage():
-    for i in range(4):
-        unicastSend()
-
-def responseMessage():
-    unicastSend()
+def timerElection(ip, port):
+    time.sleep(15)
+    if(permissao):
+        unicastSend(ip, port, 3)
     
     
 # ------------------ Main -------------------------
@@ -168,28 +178,29 @@ def main():
         print(lista[i])
     
     id = int(input("Escolha um id para começar: "))
-    ip = lista[id-1][1]
-    port = lista[id-1][2]
+    ip = lista[id][1]
+    port = lista[id][2]
     
        
-    # Inicia o multicast -- 
+    # Inicia o multicast ------------------------------------ 
     trecive = threading.Thread(target=multicastReceiver)
     trecive.start()
     # tsend = threading.Thread(target=multicastSend)
     # tsend.start()
         
-    # Inicia o Unicast -- 
-    tUreceive = threading.Thread(target=unicastReceiver,args=(ip,port,(id-1)))
+    # Inicia o Unicast --------------------------------
+    tUreceive = threading.Thread(target=unicastReceiver,args=(ip,port,(id-1),))
     tUreceive.start()
     # tUsend = threading.Thread(target=unicastSend,args=(ip,port))
     # tUsend.start()
     
         
     state = 0
-    # while(state != "1"):
-    #     state = input("Digite 1 para sair ou 0 pra enviar: ")
-    #     if(state == 0):
-    #         p1.send(" ")
+    multicastSend(1)
+    while(state != "1"):
+        state = input("Digite 0 para sair ou 1 pra enviar: ")
+        if(state == 0):
+            break
         
 
 # -------------------------------------------------
