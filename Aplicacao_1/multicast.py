@@ -80,6 +80,7 @@ def unicastReceiver(ip ,port):
             aux = input("Deseja ser o coordenador:\n1-Sim\nNao\n")
             if(aux == 1):
                 unicastSend(ip, port)
+                
     
     
 def unicastSend(ip, port):
