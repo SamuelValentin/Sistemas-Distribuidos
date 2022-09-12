@@ -30,5 +30,12 @@ def func2():
 
 
 if __name__ == '__main__':
-    Thread(target = func1).start()
-    Thread(target = func2).start()
+    # Thread(target = func1).start()
+    # Thread(target = func2).start()
+    
+    id = 0 
+    
+    menssagem = b"Bomdia"+str(id)
+    
+    data = str(menssagem)
+    print(data)

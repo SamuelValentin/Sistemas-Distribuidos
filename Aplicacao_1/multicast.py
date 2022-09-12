@@ -15,6 +15,8 @@ TIMERCOORV = 20
 TIMERELEICAO = 15
 
 coordenadorVivo = True
+eleicao = False
+end = True
 coordenador_eleito = 4
 id = 0
 
@@ -24,7 +26,7 @@ id = 0
  
 def multicastReceiver():
     print("Multicast - receiver start")
-    global coordenadorVivo
+    global coordenadorVivo, coordenador_eleito
     
     group = '224.1.1.1'
     port = 8090
@@ -37,11 +39,8 @@ def multicastReceiver():
     sock.bind(('', MCAST_PORT))
     mreq = struct.pack("4sl", socket.inet_aton(MCAST_GRP), socket.INADDR_ANY)
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
-
-    i=0
     
-    while (i < 5):
-        i += 1
+    while True:
         message = str(sock.recv(10240))
         tam = len(message)
         if (message[2] == '1'): #Ola coordenador
@@ -49,7 +48,8 @@ def multicastReceiver():
             coordenadorVivo = True
             print("Ola")
         elif (message[2] == '2'): #Anuncio do Coordenador
-            print(message[2 : tam])
+            print(message[4 : tam])
+            coordenador_eleito = message[4]
             print("Bem-vindo Chef")
         elif (message[2] == '4'): #Encerrar
             break
@@ -70,7 +70,15 @@ def multicastSend(state):
     if(state == 1): #  Ola a todos
         message = b"1-hello world" 
     elif(state == 2): # Mensagem de coordenador
-        message = b"2-Eu sou o Novo coordenador"
+        if(id == 1):
+            message = b"2-1-Eu sou o Novo coordenador"
+        elif(id == 2):
+            message = b"2-2-Eu sou o Novo coordenador"
+        elif(id == 3):
+            message = b"2-3-Eu sou o Novo coordenador"
+        elif(id == 4):
+            message = b"2-4-Eu sou o Novo coordenador"
+            
     elif(state == 4): # Finalizado
         message = b"4-Encerrando" 
     
@@ -107,13 +115,23 @@ def unicastReceiver(ip ,port):
         message = str(data)
         # Pedido de eleicao
         if(message[2] == '1'):
-            tam = len(data)
-            print(data[2 : tam])
-            aux = input("Deseja ser o coordenador:\n1-Sim\nNao\n")
-            if(aux == 1):
-                unicastSend(ip, port, 2)
-                timer = threading.Thread(target=envioEleicao)
-                timer.start()
+            
+            #Pegando o ip e port do menssageiro
+            ipB = addr[2]
+            portB = addr[2]
+            
+            if(eleicao): #Eleicao ja iniciada
+                unicastSend(ipB, portB, 2)
+                
+            else: #Eleicao init
+                tam = len(data)
+                print(data[2 : tam])
+                aux = input("Deseja ser o coordenador:\n1-Sim\nNao\n")
+                if(aux == 1):
+                    unicastSend(ip, port, 2)
+                    eleicao = True
+                    timer = threading.Thread(target=envioEleicao)
+                    timer.start()
 
         # Negado o pedido de eleição        
         elif(message[2] == '2'):
@@ -189,6 +207,8 @@ def helloCoordenador():
     while True:
         multicastSend(1)
         time.sleep(TIMERCOOR)
+        if(end):
+            break
 
 def vericaCoordenador():
     while True:
@@ -199,11 +219,16 @@ def vericaCoordenador():
             aux = input("Deseja começar uma eleicao?\n1-sim\n2-nao")
             if(aux == 1):
                 envioEleicao()
+            else:
+                time.sleep(TIMERCOORV)
+                
+        if(end):
+            break
     
     
 # ------------------ Main -------------------------
 def main():
-    global id
+    global id, end
     # Inicializacao do ip e porta
     print("Bem vindo!\n") 
     lista = listId()
@@ -229,13 +254,12 @@ def main():
         tc = threading.Thread(target=helloCoordenador)
         tc.start()
         
-    state = 0
-    multicastSend(1)
     while True:
         state = input("Digite 0 para sair")
         if(state == 0):
             multicastSend(4)
             unicastSend(4)
+            end = True
             break
         
 
