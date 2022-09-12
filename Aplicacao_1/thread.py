@@ -3,6 +3,7 @@ import time
 
 check = False
 a = False
+TIMERCOOR = 15
 
 def func1():
     print("func1 started")
@@ -25,6 +26,7 @@ def func2():
     check = False
 
     print(a)
+    print(TIMERCOOR)
 
 
 if __name__ == '__main__':
