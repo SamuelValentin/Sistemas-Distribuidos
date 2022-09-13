@@ -199,7 +199,7 @@ def main():
     multicastSend(1)
     while(state != "1"):
         state = input("Digite 0 para sair ou 1 pra enviar: ")
-        if(state == 0):
+        if(state == "0"):
             break
         
 
