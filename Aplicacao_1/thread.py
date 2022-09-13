@@ -3,6 +3,7 @@ import time
 
 check = False
 a = False
+TIMERCOOR = 15
 
 def func1():
     print("func1 started")
@@ -25,8 +26,16 @@ def func2():
     check = False
 
     print(a)
+    print(TIMERCOOR)
 
 
 if __name__ == '__main__':
-    Thread(target = func1).start()
-    Thread(target = func2).start()
+    # Thread(target = func1).start()
+    # Thread(target = func2).start()
+    
+    id = 0 
+    
+    menssagem = b"Bomdia"+str(id)
+    
+    data = str(menssagem)
+    print(data)
