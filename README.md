@@ -10,7 +10,7 @@ Objetivo é desenvolver o algoritmo de seleção de "Bully"
 
 Para testar o codigo, é necessario usar o comando a baixo e iniciar o mesmo arquivo em terminais diferentes ao mesmo tempo. Quando inicializar é necessario apenas escolher id diferentes para cada processo;
 
-"$ python sendMulti.py"
+"$ python samuel_Bully.py"
 
 Aplicação 2 - Java RMI/Pyro
 Em desenvolvimento...
