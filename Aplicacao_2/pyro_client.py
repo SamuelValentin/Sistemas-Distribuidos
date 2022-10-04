@@ -3,6 +3,8 @@ import threading
 @Pyro5.api.expose
 @Pyro5.api.callback
 
+# Server ----------------
+
 class cliente_callback(object):
     def notificacao(self, msg):
         print("callback recebido do servidor!")

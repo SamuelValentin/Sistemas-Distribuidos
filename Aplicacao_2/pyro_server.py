@@ -11,7 +11,7 @@ import threading
 # • Cancelamento de compromisso ou alerta (valor 0,2):
 # • Consulta de compromissos (valor 0,3):
 
-# Hash map
+# Servidor Agenda ----------------------
 
 class servidor(object):
     def cadastro_user(self, referenciaCliente, msg):
