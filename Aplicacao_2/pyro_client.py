@@ -1,50 +1,52 @@
-## Parte 1 - Professora
+import Pyro5.api
+import threading
+@Pyro5.api.expose
+@Pyro5.api.callback
 
-# import Pyro4
-# import threading
-
-# @Pyro4.expose
-# @Pyro4.callback
-# class cliente_callback(object):
+class cliente_callback(object):
+    def notificacao(self, msg):
+        print("callback recebido do servidor!")
+              
+    def loopThread(daemon):
+        # thread para ficar escutando chamadas de método do servidor
+        daemon.requestLoop()
+        
+    def criar_comp():
+        comp = compromisso(1,1,1,1)
+        
+        
+class compromisso():
+     def __init__(self, nome, data, horario, convidados):
+        self.nome = nome
+        self.data = data
+        self.horario = horario
+        self.convidados = convidados
     
-#     def notificacao(self):
-#         print("callback recebido do servidor!")
-            
-#     def loopThread(daemon):
-#         # thread para ficar escutando chamadas de método do servidor
-#         daemon.requestLoop()
-     
-#     def main():
-#         # obtém a referência da aplicação do servidor no serviço de nomes
-#         ns = Pyro4.locateNS()
-#         uri = ns.lookup("NomeAplicacaoServidor")
-#         servidor = Pyro4.Proxy(uri)
-#         # ... servidor.metodo() —> invoca método no servidor
-#         # Inicializa o Pyro daemon e registra o objeto Pyro callback nele.
-#         daemon = Pyro4.core.Daemon()
-#         callback = cliente_callback() # callback será enviado ao servidor
-#         daemon.register(callback)
-#         # inicializa a thread para receber notificações do servidor
-#         # thread = threading.Thread(target=loopThread, args=(daemon, ))
-#         # thread.daemon = True
-#         # thread.start()
+def main():
+    # Obtém a referência da aplicação do servidor no serviço de nomes
+    ns = Pyro5.api.locateNS()
+    uri = ns.lookup("NomeAplicacaoServidor")
+    servidor = Pyro5.api.Proxy(uri)
+    # Inicializa o Pyro daemon e registra o objeto Pyro callback nele.
+    daemon = Pyro5.server.Daemon()
+    callback = cliente_callback()
+    referenciaCliente = daemon.register(callback)
+    # Invoca método no servidor, passando a referência
+    servidor.cadastro(referenciaCliente, ...)
+    # Inicializa a thread para receber notificações do servidor
+    thread = threading.Thread(target=cliente_callback.loopThread, args=(daemon, ))
+    thread.daemon = True
+    thread.start()
 
-# Parte 2  --- Simple Pyro 
+if __name__ == '__main__':
+    main()
 
+
+# --------------------------------------------------------------------
 # saved as greeting-client.py
-# import Pyro4
+# import Pyro5.api
 
-# uri = input("What is the Pyro uri of the greeting object? ").strip()
 # name = input("What is your name? ").strip()
 
-# greeting_maker = Pyro4.Proxy(uri)     # get a Pyro proxy to the greeting object
-# print(greeting_maker.get_fortune(name))   # call method normally
-
-
-# saved as greeting-client.py
-import Pyro5.api
-
-name = input("What is your name? ").strip()
-
-greeting_maker = Pyro5.api.Proxy("PYRONAME:example.greeting")    # use name server object lookup uri shortcut
-print(greeting_maker.get_fortune(name))
+# greeting_maker = Pyro5.api.Proxy("PYRONAME:example.greeting")    # use name server object lookup uri shortcut
+# print(greeting_maker.get_fortune(name))
