@@ -1,5 +1,9 @@
 import Pyro5.api
 import threading
+
+from hashmap import *
+from compromisso import *
+
 @Pyro5.api.expose
 # configura uma instância única do servidor para ser consumida por diversos clientes
 # @Pyro4.behavior(instance_mode="single")
@@ -41,20 +45,15 @@ def main():
 if __name__ == '__main__':
     main()
     
-# -----------------------------------------------------------------------
-# saved as greeting-server.py
-# import Pyro5.api
+    
+# ---------- Test hash map
 
-# @Pyro5.api.expose
-# class GreetingMaker(object):
-#     def get_fortune(self, name):
-#         return "Hello, {0}. Here is your fortune message:\n" \
-#                "Tomorrow's lucky number is 12345678.".format(name)
+# hm = HashMap(TAM_MAP +1)
+# hm.put("1", "sachin", "a")
+# hm.put("2", "sehwag", "a")
+# hm.put("3", "ganguly", "a")
 
-# daemon = Pyro5.server.Daemon()         # make a Pyro daemon
-# ns = Pyro5.api.locate_ns()             # find the name server
-# uri = daemon.register(GreetingMaker)   # register the greeting maker as a Pyro object
-# ns.register("example.greeting", uri)   # register the object with a name in the name server
-
-# print("Ready.")
-# daemon.requestLoop()                   # start the event loop of the server to wait for calls
+# print(hm.get("1"))
+# print(hm.get("2"))
+# print(hm.get("3"))
+    

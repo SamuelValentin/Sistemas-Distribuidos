@@ -1,3 +1,7 @@
+from compromisso import *
+
+TAM_MAP = 15
+
 class Node:
     def __init__(self, key, value, id):
         self.key = key
@@ -10,7 +14,7 @@ class HashMap:
         self.store = [None for _ in range(tam)]
         
     def get(self, key):
-        index = hash(key) & 15
+        index = hash(key) & TAM_MAP 
         if self.store[index] is None:
             return None
         n = self.store[index]
@@ -25,7 +29,7 @@ class HashMap:
                 
     def put(self, key, value, id):
         nd = Node(key, value, id)
-        index = hash(key) & 15
+        index = hash(key) & TAM_MAP 
         n = self.store[index]
         if n is None:
             self.store[index] = nd
@@ -40,23 +44,12 @@ class HashMap:
                     else:
                         n = n.next
                 n.next = nd
-
-hm = HashMap(14)
-hm.put("1", "sachin", "a")
-hm.put("2", "sehwag", "a")
-hm.put("3", "ganguly", "a")
-hm.put("4", "srinath", "a")
-hm.put("5", "kumble", "a")
-hm.put("6", "dhoni", "a")
-hm.put("7", "kohli", "a")
-hm.put("8", "pandya", "a")
-
-print(hm.get("1"))
-print(hm.get("2"))
-print(hm.get("3"))
-print(hm.get("4"))
-print(hm.get("5"))
-print(hm.get("6"))
-print(hm.get("7"))
-print(hm.get("8"))
-
+                
+    def del_item(self, key):
+        index = hash(key) & TAM_MAP 
+        n = self.store[index]
+        if n != None:
+            self.store[index] = None
+        else:
+            print("Index não encontrado.")
+        

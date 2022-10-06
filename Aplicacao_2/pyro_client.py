@@ -1,5 +1,9 @@
 import Pyro5.api
 import threading
+
+from hashmap import *
+from compromisso import *
+
 @Pyro5.api.expose
 @Pyro5.api.callback
 
@@ -14,15 +18,8 @@ class cliente_callback(object):
         daemon.requestLoop()
         
     def criar_comp():
-        comp = compromisso(1,1,1,1)
+        comp = Compromisso(1,1,1,1)
         
-        
-class compromisso():
-     def __init__(self, nome, data, horario, convidados):
-        self.nome = nome
-        self.data = data
-        self.horario = horario
-        self.convidados = convidados
     
 def main():
     # Obtém a referência da aplicação do servidor no serviço de nomes
@@ -40,15 +37,5 @@ def main():
     thread.daemon = True
     thread.start()
 
-if __name__ == '__main__':
+if __name__ == '__main__': 
     main()
-
-
-# --------------------------------------------------------------------
-# saved as greeting-client.py
-# import Pyro5.api
-
-# name = input("What is your name? ").strip()
-
-# greeting_maker = Pyro5.api.Proxy("PYRONAME:example.greeting")    # use name server object lookup uri shortcut
-# print(greeting_maker.get_fortune(name))
