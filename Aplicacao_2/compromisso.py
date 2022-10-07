@@ -15,4 +15,25 @@ class Compromisso():
             return self.horario
         elif i == "convidados":
             return self.convidados
+      
+dictSam = {   
+}  
         
+thisdict = {
+}
+
+thisdict.update({"Sam" : ""})
+
+comp = Compromisso(1,1,1,1)
+
+thisdict["Sam"] = [dictSam]
+
+print(thisdict)
+
+thisdict.update({"Re" : dictSam })
+thisdict.update({"Le" : "" })
+
+dictSam.update({1: comp})
+dictSam.update({2: comp})
+
+print(thisdict)

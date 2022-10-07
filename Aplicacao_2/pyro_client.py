@@ -1,7 +1,6 @@
 import Pyro5.api
 import threading
 
-from hashmap import *
 from compromisso import *
 
 @Pyro5.api.expose
@@ -11,7 +10,7 @@ from compromisso import *
 
 class cliente_callback(object):
     def notificacao(self, msg):
-        print("callback recebido do servidor!")
+        print("callback recebido do servidor! \n" + msg)
               
     def loopThread(daemon):
         # thread para ficar escutando chamadas de método do servidor
@@ -39,8 +38,8 @@ def main():
     print("Thread start")
     
     # Invoca método no servidor, passando a referência
-    # servidor.cadastro_user(referenciaCliente, "oi")
-    servidor.consulta_comp(referenciaCliente)
+    servidor.cadastro_user(referenciaCliente, "sam", "Flamengo")
+    servidor.consulta_comp(referenciaCliente, "sam")
     
 
 if __name__ == '__main__': 
