@@ -23,19 +23,25 @@ class cliente_callback(object):
     
 def main():
     # Obtém a referência da aplicação do servidor no serviço de nomes
-    ns = Pyro5.api.locateNS()
+    ns = Pyro5.api.locate_ns()
     uri = ns.lookup("NomeAplicacaoServidor")
     servidor = Pyro5.api.Proxy(uri)
+    
     # Inicializa o Pyro daemon e registra o objeto Pyro callback nele.
     daemon = Pyro5.server.Daemon()
     callback = cliente_callback()
     referenciaCliente = daemon.register(callback)
-    # Invoca método no servidor, passando a referência
-    servidor.cadastro(referenciaCliente, ...)
+    
     # Inicializa a thread para receber notificações do servidor
     thread = threading.Thread(target=cliente_callback.loopThread, args=(daemon, ))
     thread.daemon = True
     thread.start()
+    print("Thread start")
+    
+    # Invoca método no servidor, passando a referência
+    # servidor.cadastro_user(referenciaCliente, "oi")
+    servidor.consulta_comp(referenciaCliente)
+    
 
 if __name__ == '__main__': 
     main()

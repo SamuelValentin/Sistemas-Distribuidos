@@ -3,10 +3,10 @@ from compromisso import *
 TAM_MAP = 15
 
 class Node:
-    def __init__(self, key, value, id):
+    def __init__(self, key, value, ref):
         self.key = key
         self.value = value
-        self.id = id
+        self.ref = ref
         self.next = None
 
 class HashMap:
