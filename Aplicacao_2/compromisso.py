@@ -16,24 +16,35 @@ class Compromisso():
         elif i == "convidados":
             return self.convidados
       
-dictSam = {   
-}  
+# sam = dict(1,2)
+    
+dictNomes = {}  
+
+dictSam = {}  
+dictRe = {}  
+dictJohn = {}  
+     
+print(dictNomes)
         
-thisdict = {
-}
+dictNomes.update({"Sam" : dictSam})
+dictNomes.update({"Re" : dictRe})
 
-thisdict.update({"Sam" : ""})
+print(dictNomes)
 
-comp = Compromisso(1,1,1,1)
+teste = dictNomes["Sam"]
 
-thisdict["Sam"] = [dictSam]
+print(teste)
+# comp = Compromisso(1,1,1,1)
 
-print(thisdict)
+# thisdict["Sam"] = [dictSam]
 
-thisdict.update({"Re" : dictSam })
-thisdict.update({"Le" : "" })
+# print(thisdict)
 
-dictSam.update({1: comp})
-dictSam.update({2: comp})
+# thisdict.update({"Re" : dictSam })
+# thisdict.update({"Le" : "" })
 
-print(thisdict)
+# dictSam.update({1: comp})
+# dictSam.update({2: comp})
+# del dictSam[1]
+
+# print(thisdict)

@@ -19,6 +19,7 @@ class cliente_callback(object):
     def criar_comp():
         comp = Compromisso(1,1,1,1)
         
+        
     
 def main():
     # Obtém a referência da aplicação do servidor no serviço de nomes
@@ -37,9 +38,23 @@ def main():
     thread.start()
     print("Thread start")
     
+    #init user ------------------------------------------
+    # print("Escolha um usuario:\n1-Sam\n2-Re\n3-John")
+    aux = input("Escolha um usuario:\n1-Sam\n2-Re\n3-John")
+    
+    if(aux == "1"):
+        nome = "Sam"
+        list_ = dictSam
+    elif(aux == "2"):
+        nome = "Re"
+        list_ = dictRe
+    elif(aux == "3"):
+        nome = "John"
+        list_ = dictJohn
+    
     # Invoca método no servidor, passando a referência
-    servidor.cadastro_user(referenciaCliente, "sam", "Flamengo")
-    servidor.consulta_comp(referenciaCliente, "sam")
+    servidor.cadastro_user(referenciaCliente, nome, "Flamengo", "mengo")
+    servidor.consulta_comp(referenciaCliente, nome, "_")
     
 
 if __name__ == '__main__': 

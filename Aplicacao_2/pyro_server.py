@@ -16,22 +16,38 @@ from compromisso import *
 
 # Servidor Agenda ----------------------
 class servidor(object):    
-    def cadastro_user(self, referenciaCliente, name, msg):
+    def cadastro_user(self, referenciaCliente, name, msg, dict_):
         cliente = Pyro5.api.Proxy(referenciaCliente)
         cliente.notificacao("Cadastrado...")
         
-        thisdict.update({name: msg})
+        dictNomes.update({name: dict_})
         
         
-    def cadastro_comp(self, referenciaCliente, comp):
+    def cadastro_comp(self, referenciaCliente, nome, comp):
         print("Cadastro do compromisso")
         
-    def cancelamento_comp(self, referenciaCliente, comp):
+        dict_ = dictNomes[nome]
+        dict_.update({"1" : comp})
+        
+        
+    def cancelamento_comp(self, referenciaCliente, nome, comp):
         print("Cancelamento do compromisso")
         
-    def consulta_comp(self, referenciaCliente, name):
+        dict_ = dictNomes[nome]
+        del dict_[comp]
+        
+        
+    def cadastro_alerta(self, referenciaCliente, nome, comp):
+        print("Cadastro do Alerta")
+        
+    def cancelamento_alerta(self, referenciaCliente, nome, comp):
+        print("Cancelamento do compromisso")
+        
+    def consulta_comp(self, referenciaCliente, name, data):
         cliente = Pyro5.api.Proxy(referenciaCliente)
-        cliente.notificacao(thisdict[name])
+        
+        
+        cliente.notificacao(dictNomes[name])
   
 
 def main():
