@@ -1,3 +1,4 @@
+from time import sleep
 import Pyro5.api
 import threading
 
@@ -35,11 +36,10 @@ class servidor(object):
         dict_ = dictNomes[nome]
         dict_.update({nome_c : comp})
         
-        d = dict_[nome_c]
+        timer = 2
         
-        print(d.get("nome"))
-        print(d.get("data"))
-        print(d.get("horario"))
+        thread = threading.Thread(target=servidor.cadastro_alerta, args=(referenciaCliente, timer, comp))
+        thread.start()
         
         
     def cancelamento_comp(self, referenciaCliente, nome, comp):
@@ -48,9 +48,13 @@ class servidor(object):
         dict_ = dictNomes[nome]
         del dict_[comp]
         
-        
-    def cadastro_alerta(self, referenciaCliente, nome, comp):
+    def cadastro_alerta(self, referenciaCliente, timer, comp):
         print("Cadastro do Alerta")
+        
+        sleep(timer)
+        cliente = Pyro5.api.Proxy(referenciaCliente)
+        cliente.notificacao("Evento " + comp.get("nome") + " chegando")
+        
         
     def cancelamento_alerta(self, referenciaCliente, nome, comp):
         print("Cancelamento do compromisso")
@@ -61,12 +65,7 @@ class servidor(object):
         dict_ = dictNomes[nome]
         
         for comp in dict_.values():
-            # comp = dict_[name_c]
-            print(comp)
-            n = comp.get("nome")
-            d = comp.get("data")
-            print(n + " - " + d)
-            cliente.consulta_comp(n, d)
+            cliente.consulta_comp(comp.get("nome"), comp.get("data"))
 
 def main():
     # registra a aplicação do servidor no serviço de nomes
