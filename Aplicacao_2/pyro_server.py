@@ -16,18 +16,30 @@ from compromisso import *
 
 # Servidor Agenda ----------------------
 class servidor(object):    
-    def cadastro_user(self, referenciaCliente, name, msg, dict_):
+    def cadastro_user(self, referenciaCliente, name, dict_):
         cliente = Pyro5.api.Proxy(referenciaCliente)
         cliente.notificacao("Cadastrado...")
         
         dictNomes.update({name: dict_})
+        dictRef.update({name: referenciaCliente})
         
+        print(dictNomes)
+        print(dictRef)
         
-    def cadastro_comp(self, referenciaCliente, nome, comp):
+
+    def cadastro_comp(self, referenciaCliente, nome, nome_c, data, horario, convidados_):
         print("Cadastro do compromisso")
         
+        comp = Compromisso(nome_c, data, horario, convidados_)
+        
         dict_ = dictNomes[nome]
-        dict_.update({"1" : comp})
+        dict_.update({nome_c : comp})
+        
+        d = dict_[nome_c]
+        
+        print(d.get("nome"))
+        print(d.get("data"))
+        print(d.get("horario"))
         
         
     def cancelamento_comp(self, referenciaCliente, nome, comp):
@@ -43,12 +55,18 @@ class servidor(object):
     def cancelamento_alerta(self, referenciaCliente, nome, comp):
         print("Cancelamento do compromisso")
         
-    def consulta_comp(self, referenciaCliente, name, data):
+    def consulta_comp(self, referenciaCliente, nome):
         cliente = Pyro5.api.Proxy(referenciaCliente)
         
+        dict_ = dictNomes[nome]
         
-        cliente.notificacao(dictNomes[name])
-  
+        for comp in dict_.values():
+            # comp = dict_[name_c]
+            print(comp)
+            n = comp.get("nome")
+            d = comp.get("data")
+            print(n + " - " + d)
+            cliente.consulta_comp(n, d)
 
 def main():
     # registra a aplicação do servidor no serviço de nomes

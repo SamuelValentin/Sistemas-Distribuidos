@@ -16,10 +16,27 @@ class cliente_callback(object):
         # thread para ficar escutando chamadas de método do servidor
         daemon.requestLoop()
         
-    def criar_comp():
-        comp = Compromisso(1,1,1,1)
+    def consulta_comp(self, nome_c, data):
+        print(nome_c + " - " + data)
         
+def criar_comp(servidor, referenciaCliente, nome):
+        # nome_c = input("Qual o nome do compromisso?")
+        # data = input("Qual a data?")
+        # horario = input("Qual o horario?")
+        nome_c = "Samuel"
+        data = "28/10/22"
+        horario = "18:00"
+        # num_conv = input("Quantos convidados?")
+        convidados_ = {}
+        # if(int(num_conv) > 0):
+        #     for i in range(int(num_conv)):
+        #         convidado = input("nome convidado")
+        #         convidados_.append(convidado)
+                
+        # comp = Compromisso(nome,data,horario,convidados_)
         
+        servidor.cadastro_comp(referenciaCliente, nome, nome_c, data, horario, convidados_)
+
     
 def main():
     # Obtém a referência da aplicação do servidor no serviço de nomes
@@ -40,21 +57,18 @@ def main():
     
     #init user ------------------------------------------
     # print("Escolha um usuario:\n1-Sam\n2-Re\n3-John")
-    aux = input("Escolha um usuario:\n1-Sam\n2-Re\n3-John")
+    nome = input("Escolha um nome de usuario: ")
     
-    if(aux == "1"):
-        nome = "Sam"
-        list_ = dictSam
-    elif(aux == "2"):
-        nome = "Re"
-        list_ = dictRe
-    elif(aux == "3"):
-        nome = "John"
-        list_ = dictJohn
+    # dict_ = {nome_c: comp}
+    dict_ = {}
     
     # Invoca método no servidor, passando a referência
-    servidor.cadastro_user(referenciaCliente, nome, "Flamengo", "mengo")
-    servidor.consulta_comp(referenciaCliente, nome, "_")
+    servidor.cadastro_user(referenciaCliente, nome, dict_)
+    
+    criar_comp(servidor, referenciaCliente, nome)
+    # while(True): 
+        # aux = input("Escolha uma opcao:\n1 - Cadastrar compromisso\n2 - Consultar compromissos\n3 - Cancelar compromisso\n4 - Sair")
+    servidor.consulta_comp(referenciaCliente, nome)
     
 
 if __name__ == '__main__': 

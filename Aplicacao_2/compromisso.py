@@ -19,21 +19,22 @@ class Compromisso():
 # sam = dict(1,2)
     
 dictNomes = {}  
+dictRef = {}
 
-dictSam = {}  
-dictRe = {}  
-dictJohn = {}  
+# dictSam = {}  
+# dictRe = {}  
+# dictJohn = {}  
      
-print(dictNomes)
+# print(dictNomes)
         
-dictNomes.update({"Sam" : dictSam})
-dictNomes.update({"Re" : dictRe})
+# dictNomes.update({"Sam" : dictSam})
+# dictNomes.update({"Re" : dictRe})
 
-print(dictNomes)
+# print(dictNomes)
 
-teste = dictNomes["Sam"]
+# teste = dictNomes["Sam"]
 
-print(teste)
+# print(teste)
 # comp = Compromisso(1,1,1,1)
 
 # thisdict["Sam"] = [dictSam]
