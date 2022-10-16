@@ -36,10 +36,8 @@ class servidor(object):
         dict_ = dictNomes[nome]
         dict_.update({nome_c : comp})
         
-        timer = 2
-        
-        thread = threading.Thread(target=servidor.cadastro_alerta, args=(referenciaCliente, comp))
-        thread.start()
+        th= threading.Thread(target=servidor.cadastro_alerta, args=(self, referenciaCliente, comp))
+        th.start()
         
         
     def cancelamento_comp(self, referenciaCliente, nome, comp):
@@ -55,12 +53,13 @@ class servidor(object):
             sleep(15)
             ini_time_for_now = datetime.now()
             notfica = ini_time_for_now + \
-                            timedelta(minutes = 3)
-            if(notfica == comp.get("horario")):
+                            timedelta(minutes = 5)
+            timer = notfica.strftime("%H:%M")
+            if(str(timer) == comp.get("horario")):
                 break
         
         cliente = Pyro5.api.Proxy(referenciaCliente)
-        cliente.notificacao("Evento " + comp.get("nome") + " chegando")
+        cliente.notificacao("Evento " + comp.get("nome") + " chegando em 5 minutos")
         
         
     def cancelamento_alerta(self, referenciaCliente, nome, comp):

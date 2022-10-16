@@ -25,7 +25,7 @@ def criar_comp(servidor, referenciaCliente, nome):
         # data = input("Qual a data?")
         # horario = input("Qual o horario?")
         data = "28/10/22"
-        horario = "18:00"
+        horario = "18:08"
         # num_conv = input("Quantos convidados?")
         convidados_ = {}
         # if(int(num_conv) > 0):
