@@ -38,7 +38,7 @@ class servidor(object):
         
         timer = 2
         
-        thread = threading.Thread(target=servidor.cadastro_alerta, args=(referenciaCliente, timer, comp))
+        thread = threading.Thread(target=servidor.cadastro_alerta, args=(referenciaCliente, comp))
         thread.start()
         
         
@@ -48,7 +48,7 @@ class servidor(object):
         dict_ = dictNomes[nome]
         del dict_[comp]
         
-    def cadastro_alerta(self, referenciaCliente, timer, comp):
+    def cadastro_alerta(self, referenciaCliente, comp):
         print("Cadastro do Alerta")
         
         while(True):

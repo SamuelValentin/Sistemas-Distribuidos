@@ -20,10 +20,9 @@ class cliente_callback(object):
         print(nome_c + " - " + data)
         
 def criar_comp(servidor, referenciaCliente, nome):
-        # nome_c = input("Qual o nome do compromisso?")
+        nome_c = input("Qual o nome do compromisso?")
         # data = input("Qual a data?")
         # horario = input("Qual o horario?")
-        nome_c = "Samuel"
         data = "28/10/22"
         horario = "18:00"
         # num_conv = input("Quantos convidados?")
@@ -65,10 +64,18 @@ def main():
     # Invoca método no servidor, passando a referência
     servidor.cadastro_user(referenciaCliente, nome, dict_)
     
-    criar_comp(servidor, referenciaCliente, nome)
-    while(True): 
+    # criar_comp(servidor, referenciaCliente, nome)
+    aux = 0
+    
+    while(aux != "4"): 
         aux = input("Escolha uma opcao:\n1 - Cadastrar compromisso\n2 - Consultar compromissos\n3 - Cancelar compromisso\n4 - Sair")
-        servidor.consulta_comp(referenciaCliente, nome, "28/10/22")
+        if(aux != "1"):
+            criar_comp(servidor, referenciaCliente, nome)
+        elif(aux != "2"):
+            servidor.consulta_comp(referenciaCliente, nome, "28/10/22")
+        elif(aux != "3"):
+            print("Não da pra cancelar")
+            
     
 
 if __name__ == '__main__': 
