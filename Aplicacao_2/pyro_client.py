@@ -17,6 +17,7 @@ class cliente_callback(object):
         daemon.requestLoop()
         
     def consulta_comp(self, nome_c, data):
+        print("------------")
         print(nome_c + " - " + data)
         
 def criar_comp(servidor, referenciaCliente, nome):
@@ -54,7 +55,7 @@ def main():
     thread.start()
     print("Thread start")
     
-    #init user ------------------------------------------
+    #init user ____________________________________________________
     # print("Escolha um usuario:\n1-Sam\n2-Re\n3-John")
     nome = input("Escolha um nome de usuario: ")
     
@@ -63,17 +64,15 @@ def main():
     
     # Invoca método no servidor, passando a referência
     servidor.cadastro_user(referenciaCliente, nome, dict_)
-    
-    # criar_comp(servidor, referenciaCliente, nome)
+
     aux = 0
-    
     while(aux != "4"): 
-        aux = input("Escolha uma opcao:\n1 - Cadastrar compromisso\n2 - Consultar compromissos\n3 - Cancelar compromisso\n4 - Sair")
-        if(aux != "1"):
+        aux = input("Escolha uma opcao:\n1 - Cadastrar compromisso\n2 - Consultar compromissos\n3 - Cancelar compromisso\n4 - Sair\n\n")
+        if(aux == "1"):
             criar_comp(servidor, referenciaCliente, nome)
-        elif(aux != "2"):
+        elif(aux == "2"):
             servidor.consulta_comp(referenciaCliente, nome, "28/10/22")
-        elif(aux != "3"):
+        elif(aux == "3"):
             print("Não da pra cancelar")
             
     
