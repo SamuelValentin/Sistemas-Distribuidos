@@ -51,7 +51,14 @@ class servidor(object):
     def cadastro_alerta(self, referenciaCliente, timer, comp):
         print("Cadastro do Alerta")
         
-        sleep(timer)
+        while(True):
+            sleep(15)
+            ini_time_for_now = datetime.now()
+            notfica = ini_time_for_now + \
+                            timedelta(minutes = 3)
+            if(notfica == comp.get("horario")):
+                break
+        
         cliente = Pyro5.api.Proxy(referenciaCliente)
         cliente.notificacao("Evento " + comp.get("nome") + " chegando")
         
@@ -59,13 +66,13 @@ class servidor(object):
     def cancelamento_alerta(self, referenciaCliente, nome, comp):
         print("Cancelamento do compromisso")
         
-    def consulta_comp(self, referenciaCliente, nome):
+    def consulta_comp(self, referenciaCliente, nome, data):
         cliente = Pyro5.api.Proxy(referenciaCliente)
-        
         dict_ = dictNomes[nome]
         
         for comp in dict_.values():
-            cliente.consulta_comp(comp.get("nome"), comp.get("data"))
+            if data == comp.get("data"):
+                cliente.consulta_comp(comp.get("nome"), comp.get("data"))
 
 def main():
     # registra a aplicação do servidor no serviço de nomes
@@ -78,20 +85,5 @@ def main():
     daemon.requestLoop()
     
 
-
-
 if __name__ == '__main__':
     main()
-    
-    
-# ---------- Test hash map
-
-# hm = HashMap(TAM_MAP +1)
-# hm.put("1", "sachin", "a")
-# hm.put("2", "sehwag", "a")
-# hm.put("3", "ganguly", "a")
-
-# print(hm.get("1"))
-# print(hm.get("2"))
-# print(hm.get("3"))
-    

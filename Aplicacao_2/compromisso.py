@@ -1,3 +1,6 @@
+from datetime import date
+from datetime import datetime
+from datetime import timedelta
         
 class Compromisso():
     def __init__(self, nome, data, horario, convidados):
@@ -15,37 +18,24 @@ class Compromisso():
             return self.horario
         elif i == "convidados":
             return self.convidados
-      
-# sam = dict(1,2)
     
 dictNomes = {}  
 dictRef = {}
 
-# dictSam = {}  
-# dictRe = {}  
-# dictJohn = {}  
-     
-# print(dictNomes)
-        
-# dictNomes.update({"Sam" : dictSam})
-# dictNomes.update({"Re" : dictRe})
 
-# print(dictNomes)
+# data_e_hora_atuais = datetime.now()
+# data_e_hora_em_texto = data_e_hora_atuais.strftime("%H:%M")
+      
+# ---------------------------      
+# Using current time
+# ini_time_for_now = datetime.now()
+# notfica = ini_time_for_now + \
+#                         timedelta(minutes = 3)
+ 
+# print('notificao:', str(notfica))
+# data_e_hora_em_texto = notfica.strftime("%H:%M")
+# print(data_e_hora_em_texto)
 
-# teste = dictNomes["Sam"]
-
-# print(teste)
-# comp = Compromisso(1,1,1,1)
-
-# thisdict["Sam"] = [dictSam]
-
-# print(thisdict)
-
-# thisdict.update({"Re" : dictSam })
-# thisdict.update({"Le" : "" })
-
-# dictSam.update({1: comp})
-# dictSam.update({2: comp})
-# del dictSam[1]
-
-# print(thisdict)
+# if str(data_e_hora_em_texto) == "12:13":
+#     print("LEgal")
+ 

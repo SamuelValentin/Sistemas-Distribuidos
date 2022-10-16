@@ -66,9 +66,9 @@ def main():
     servidor.cadastro_user(referenciaCliente, nome, dict_)
     
     criar_comp(servidor, referenciaCliente, nome)
-    # while(True): 
-        # aux = input("Escolha uma opcao:\n1 - Cadastrar compromisso\n2 - Consultar compromissos\n3 - Cancelar compromisso\n4 - Sair")
-    servidor.consulta_comp(referenciaCliente, nome)
+    while(True): 
+        aux = input("Escolha uma opcao:\n1 - Cadastrar compromisso\n2 - Consultar compromissos\n3 - Cancelar compromisso\n4 - Sair")
+        servidor.consulta_comp(referenciaCliente, nome, "28/10/22")
     
 
 if __name__ == '__main__': 
