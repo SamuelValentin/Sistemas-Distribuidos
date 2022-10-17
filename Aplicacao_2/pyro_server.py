@@ -29,7 +29,7 @@ class servidor(object):
         
 
     def cadastro_comp(self, referenciaCliente, nome, nome_c, data, horario, convidados_):
-        print("Cadastro do compromisso")
+        print("Cadastro do compromisso: " + nome_c)
         
         comp = Compromisso(nome_c, data, horario, convidados_)
         
@@ -49,17 +49,35 @@ class servidor(object):
     def cadastro_alerta(self, referenciaCliente, comp):
         print("Cadastro do Alerta")
         
+        convidados_ = []
+        convidados = comp.get("convidados")
+        
+        for conv in convidados:
+            conv_ref = dictRef[conv]
+            cliente_conv = Pyro5.api.Proxy(conv_ref)
+            aux = cliente_conv.convidado_alerta(comp.get("nome"))
+            if aux == "1":
+                convidados_.append(conv)
+        
         while(True):
-            sleep(15)
+            sleep(10)
             ini_time_for_now = datetime.now()
             notfica = ini_time_for_now + \
                             timedelta(minutes = 5)
             timer = notfica.strftime("%H:%M")
             if(str(timer) == comp.get("horario")):
                 break
-        
+            
+        print("Enviando not")
         cliente = Pyro5.api.Proxy(referenciaCliente)
         cliente.notificacao("Evento " + comp.get("nome") + " chegando em 5 minutos")
+        
+        for convidado in convidados_:
+            referenciaConvidado_ = dictRef[convidado]
+            
+            cliente = Pyro5.api.Proxy(referenciaConvidado_)
+            cliente.notificacao("Evento " + comp.get("nome") + " chegando em 5 minutos")
+            
         
         
     def cancelamento_alerta(self, referenciaCliente, nome, comp):

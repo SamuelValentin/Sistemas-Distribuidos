@@ -20,14 +20,19 @@ class cliente_callback(object):
         print("------------")
         print(nome_c + " - " + data)
         
+    def convidado_alerta(self, nome_c):
+        print("Requisição do servidor: Digite 5")
+        aux = input("Deseja receber notificação do compromisso " + nome_c + "?\n1-sim\n2-não\n")
+        return aux
+        
 def criar_comp(servidor, referenciaCliente, nome):
         nome_c = input("Qual o nome do compromisso?")
         # data = input("Qual a data?")
         # horario = input("Qual o horario?")
-        data = "28/10/22"
-        horario = "18:08"
+        data = "17/10/22"
+        horario = "11:20"
         # num_conv = input("Quantos convidados?")
-        convidados_ = {}
+        convidados_ = ["Samuel"]
         # if(int(num_conv) > 0):
         #     for i in range(int(num_conv)):
         #         convidado = input("nome convidado")
@@ -71,7 +76,8 @@ def main():
         if(aux == "1"):
             criar_comp(servidor, referenciaCliente, nome)
         elif(aux == "2"):
-            servidor.consulta_comp(referenciaCliente, nome, "28/10/22")
+            data = input("Qual seria a data?: ")
+            servidor.consulta_comp(referenciaCliente, nome, data)
         elif(aux == "3"):
             print("Não da pra cancelar")
             

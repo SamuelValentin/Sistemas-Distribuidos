@@ -39,3 +39,5 @@ dictRef = {}
 # if str(data_e_hora_em_texto) == "12:13":
 #     print("LEgal")
  
+for comp in dictRef:
+    print(dictRef[comp])
