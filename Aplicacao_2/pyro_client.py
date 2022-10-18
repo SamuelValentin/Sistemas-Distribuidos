@@ -9,27 +9,7 @@ from compromisso import *
 
 # Server ----------------
 
-class cliente_callback(object):
-    def __init__(self):
-        self.pub_key = 0
-        
-    def get_pubKey(self):
-        return self.pub_key
-    
-    def set_pubKey(self):
-        random_seed = Random.new().read
-
-        # Sign the message using the PKCS#1 v1.5 signature scheme (RSASP1)
-        key_pair = RSA.generate(1024, random_seed)
-        pub_key = key_pair.publickey()
-        
-        self.pub_key = pub_key
-
-        true_text = 'Hello Bob'
-        fake_text = 'Bye Bob'
-
-        hashA = SHA256.new(bytes(true_text, 'utf-8'))
-        
+class cliente_callback(object):        
     def notificacao(self, msg):
         print("callback recebido do servidor! \n\n" + msg)
               
@@ -79,10 +59,8 @@ def main():
     print("Thread start")
     
     #init user ____________________________________________________
-    # print("Escolha um usuario:\n1-Sam\n2-Re\n3-John")
     nome = input("Escolha um nome de usuario: ")
     
-    # dict_ = {nome_c: comp}
     dict_ = {}
     
     # Invoca método no servidor, passando a referência
@@ -90,8 +68,8 @@ def main():
     # print(callback.get_pubKey())
 
     aux = 0
-    while(aux != "4"): 
-        aux = input("Escolha uma opcao:\n1 - Cadastrar compromisso\n2 - Consultar compromissos\n3 - Cancelar compromisso\n4 - Sair\n\n")
+    while(aux != "0"): 
+        aux = input("Escolha uma opcao:\n1 - Cadastrar compromisso\n2 - Consultar compromissos\n3 - Cancelar compromisso\n4 - Cancelar alerta\n0 - Sair\n\n")
         if(aux == "1"):
             criar_comp(servidor, referenciaCliente, nome)
         elif(aux == "2"):
@@ -101,6 +79,9 @@ def main():
         elif(aux == "3"):
             nome_c = input("Qual seria o compromisso?: ")
             servidor.cancelamento_comp(referenciaCliente, nome, nome_c)
+        elif(aux == "4"):
+            nome_c = input("Qual seria o compromisso?: ")
+            servidor.cancelamento_alerta(referenciaCliente, nome, nome_c)
             
     
 

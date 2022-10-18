@@ -27,24 +27,24 @@ class servidor(object):
         print(dictNomes)
         print(dictRef)
         
-        # random_seed = Random.new().read
-        # key_pair = RSA.generate(1024, random_seed)
-        # pub_key = key_pair.publickey()
-        
-        # print(pub_key)
-        
-        cliente.set_pubKey()
-        
 
     def cadastro_comp(self, referenciaCliente, nome, nome_c, data, horario, convidados_):
         print("Cadastro do compromisso: " + nome_c)
         
-        comp = Compromisso(nome_c, data, horario, convidados_)
+        comp = Compromisso(nome_c, data, horario, convidados_, [])
         
         dict_ = dictNomes[nome]
         dict_.update({nome_c : comp})
         
-        th= threading.Thread(target=self.cadastro_alerta, args=(referenciaCliente, comp, nome))
+        for conv in convidados_:
+            try:
+                dict_ = dictNomes[conv]
+                dict_.update({nome_c : comp})
+            
+            except KeyError:
+                print("Usuario não encontrado")
+        
+        th = threading.Thread(target=self.cadastro_alerta, args=(referenciaCliente, comp, nome))
         th.start()
         
         
@@ -69,14 +69,19 @@ class servidor(object):
                     convidados_.append(conv)
             except KeyError:
                 print("Usuario não encontrado")
+                
+        comp.set_alerta(convidados_)
         
+        print("Start timer")
         while(True):
             sleep(10)
             ini_time_for_now = datetime.now()
             notfica = ini_time_for_now + \
                             timedelta(minutes = 5)
             timer = notfica.strftime("%H:%M")
-            if(str(timer) == comp.get("horario")):
+            data = notfica.strftime("%d/%m/%y")  
+            data2 = notfica.strftime("%d/%m/%Y")            
+            if(str(timer) == comp.get("horario") and (str(data) == comp.get("data") or str(data2) == comp.get("data"))):
                 break
             
         try:
@@ -88,18 +93,40 @@ class servidor(object):
             cliente = Pyro5.api.Proxy(referenciaCliente)
             cliente.notificacao("Evento " + comp.get("nome") + " chegando em 5 minutos")
             
+            convidados_ = comp.get("alerta")
+                
             for convidado in convidados_:
                 referenciaConvidado_ = dictRef[convidado]
                 
                 cliente = Pyro5.api.Proxy(referenciaConvidado_)
                 cliente.notificacao("Evento " + comp.get("nome") + " chegando em 5 minutos")
-                
+            
         except KeyError:
             print("Notificaçao cancelada...")
             
         
-    def cancelamento_alerta(self, referenciaCliente, nome, comp):
+    def cancelamento_alerta(self, referenciaCliente, nome, nome_c):
         print("Cancelamento do compromisso")
+        
+        dict_ = dictNomes[nome]
+        comp =  dict_[nome_c]
+        
+        print(comp)
+        
+        array = comp.get("alerta")
+        
+        print(array)
+        aux = 0
+        
+        j = 0
+        for i in array:
+            if i == nome:
+                aux = j
+            j = j + 1
+                
+        array.pop(aux)
+        
+        comp.set_alerta(array)
         
     def consulta_comp(self, referenciaCliente, nome, data):
         cliente = Pyro5.api.Proxy(referenciaCliente)
