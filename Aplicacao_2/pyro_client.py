@@ -1,3 +1,4 @@
+# from asyncio.windows_events import NULL
 import Pyro5.api
 import threading
 
@@ -9,36 +10,53 @@ from compromisso import *
 # Server ----------------
 
 class cliente_callback(object):
+    def __init__(self):
+        self.pub_key = 0
+        
+    def get_pubKey(self):
+        return self.pub_key
+    
+    def set_pubKey(self):
+        random_seed = Random.new().read
+
+        # Sign the message using the PKCS#1 v1.5 signature scheme (RSASP1)
+        key_pair = RSA.generate(1024, random_seed)
+        pub_key = key_pair.publickey()
+        
+        self.pub_key = pub_key
+
+        true_text = 'Hello Bob'
+        fake_text = 'Bye Bob'
+
+        hashA = SHA256.new(bytes(true_text, 'utf-8'))
+        
     def notificacao(self, msg):
-        print("callback recebido do servidor! \n" + msg)
+        print("callback recebido do servidor! \n\n" + msg)
               
-    def loopThread(daemon):
+    def loopThread(self, daemon):
         # thread para ficar escutando chamadas de método do servidor
         daemon.requestLoop()
         
-    def consulta_comp(self, nome_c, data):
-        print("------------")
-        print(nome_c + " - " + data)
+    def consulta_comp(self, nome_c, data, horario):
+        print("_____________________")
+        print(nome_c + " - " + data + " - " + horario) 
         
     def convidado_alerta(self, nome_c):
         print("Requisição do servidor: Digite 5")
         aux = input("Deseja receber notificação do compromisso " + nome_c + "?\n1-sim\n2-não\n")
         return aux
+    
         
 def criar_comp(servidor, referenciaCliente, nome):
-        nome_c = input("Qual o nome do compromisso?")
-        # data = input("Qual a data?")
-        # horario = input("Qual o horario?")
-        data = "17/10/22"
-        horario = "11:20"
-        # num_conv = input("Quantos convidados?")
-        convidados_ = ["Samuel"]
-        # if(int(num_conv) > 0):
-        #     for i in range(int(num_conv)):
-        #         convidado = input("nome convidado")
-        #         convidados_.append(convidado)
-                
-        # comp = Compromisso(nome,data,horario,convidados_)
+        nome_c = input("Qual o nome do compromisso? ")
+        data = input("Qual a data? ")
+        horario = input("Qual o horario? ")
+        num_conv = input("Quantos convidados? ")
+        convidados_ = []
+        if(int(num_conv) > 0):
+            for i in range(int(num_conv)):
+                convidado = input("Qual o nome do convidado? ")
+                convidados_.append(convidado)
         
         servidor.cadastro_comp(referenciaCliente, nome, nome_c, data, horario, convidados_)
 
@@ -46,7 +64,7 @@ def criar_comp(servidor, referenciaCliente, nome):
 def main():
     # Obtém a referência da aplicação do servidor no serviço de nomes
     ns = Pyro5.api.locate_ns()
-    uri = ns.lookup("NomeAplicacaoServidor")
+    uri = ns.lookup("AgendaServer")
     servidor = Pyro5.api.Proxy(uri)
     
     # Inicializa o Pyro daemon e registra o objeto Pyro callback nele.
@@ -55,7 +73,7 @@ def main():
     referenciaCliente = daemon.register(callback)
     
     # Inicializa a thread para receber notificações do servidor
-    thread = threading.Thread(target=cliente_callback.loopThread, args=(daemon, ))
+    thread = threading.Thread(target=callback.loopThread, args=(daemon, ))
     thread.daemon = True
     thread.start()
     print("Thread start")
@@ -69,6 +87,7 @@ def main():
     
     # Invoca método no servidor, passando a referência
     servidor.cadastro_user(referenciaCliente, nome, dict_)
+    # print(callback.get_pubKey())
 
     aux = 0
     while(aux != "4"): 
@@ -77,9 +96,11 @@ def main():
             criar_comp(servidor, referenciaCliente, nome)
         elif(aux == "2"):
             data = input("Qual seria a data?: ")
+            print("Dia " + data + ". Compromissos: ")
             servidor.consulta_comp(referenciaCliente, nome, data)
         elif(aux == "3"):
-            print("Não da pra cancelar")
+            nome_c = input("Qual seria o compromisso?: ")
+            servidor.cancelamento_comp(referenciaCliente, nome, nome_c)
             
     
 

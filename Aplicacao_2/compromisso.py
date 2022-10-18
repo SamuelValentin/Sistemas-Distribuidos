@@ -1,6 +1,13 @@
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
+
+import binascii
+
+from Crypto.Hash import SHA256
+from Crypto.PublicKey import RSA
+from Crypto import Random
+from Crypto.Signature import pkcs1_15
         
 class Compromisso():
     def __init__(self, nome, data, horario, convidados):
@@ -21,23 +28,3 @@ class Compromisso():
     
 dictNomes = {}  
 dictRef = {}
-
-
-# data_e_hora_atuais = datetime.now()
-# data_e_hora_em_texto = data_e_hora_atuais.strftime("%H:%M")
-      
-# ---------------------------      
-# Using current time
-# ini_time_for_now = datetime.now()
-# notfica = ini_time_for_now + \
-#                         timedelta(minutes = 3)
- 
-# print('notificao:', str(notfica))
-# data_e_hora_em_texto = notfica.strftime("%H:%M")
-# print(data_e_hora_em_texto)
-
-# if str(data_e_hora_em_texto) == "12:13":
-#     print("LEgal")
- 
-for comp in dictRef:
-    print(dictRef[comp])
