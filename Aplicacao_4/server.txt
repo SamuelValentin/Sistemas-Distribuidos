@@ -1,0 +1,6 @@
+abreTransação()
+abreSubTransação(trans);
+unir(trans, referencia_participante);
+obtemStatus(trans);
+terminaTransação(trans);
+abortaTransação(trans);

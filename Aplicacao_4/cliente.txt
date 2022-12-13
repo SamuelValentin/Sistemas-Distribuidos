@@ -1,0 +1,10 @@
+function listar_cartas()
+
+function abrir_Pacote()
+
+function trocar_carta()
+
+main(){
+
+    
+}
