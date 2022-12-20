@@ -1,0 +1,4 @@
+MAN:Neymar
+MAN:Paqueta
+VEN:Pepe
+NEG:Gakpo

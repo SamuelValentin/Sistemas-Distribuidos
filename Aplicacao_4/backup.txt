@@ -1,0 +1,4 @@
+MAN:Gakpo-samuel_v=1
+VEN:Paqueta-rebecada=1
+MAN:Paqueta-samuel_v=2
+MAN:Gakpo-rebecada=2
